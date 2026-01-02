@@ -1,0 +1,60 @@
+--color-amaranth-50: #fbeaeb;
+--color-amaranth-100: #f7d4d8;
+--color-amaranth-200: #eeaab1;
+--color-amaranth-300: #e67f89;
+--color-amaranth-400: #dd5562;
+--color-amaranth-500: #d52a3b;
+--color-amaranth-600: #aa222f;
+--color-amaranth-700: #801923;
+--color-amaranth-800: #551118;
+--color-amaranth-900: #2b080c;
+--color-amaranth-950: #1e0608;
+
+--color-dark-coffee-50: #f7f1ed;
+--color-dark-coffee-100: #efe2dc;
+--color-dark-coffee-200: #dfc6b9;
+--color-dark-coffee-300: #d0a995;
+--color-dark-coffee-400: #c08c72;
+--color-dark-coffee-500: #b06f4f;
+--color-dark-coffee-600: #8d593f;
+--color-dark-coffee-700: #6a432f;
+--color-dark-coffee-800: #462d20;
+--color-dark-coffee-900: #231610;
+--color-dark-coffee-950: #19100b;
+
+--color-peach-glow-50: #fdf0e7;
+--color-peach-glow-100: #fce1cf;
+--color-peach-glow-200: #f9c39f;
+--color-peach-glow-300: #f6a56f;
+--color-peach-glow-400: #f3873f;
+--color-peach-glow-500: #f0690f;
+--color-peach-glow-600: #c0540c;
+--color-peach-glow-700: #903f09;
+--color-peach-glow-800: #602a06;
+--color-peach-glow-900: #301503;
+--color-peach-glow-950: #220f02;
+
+--color-soft-apricot-50: #fef3e7;
+--color-soft-apricot-100: #fce8cf;
+--color-soft-apricot-200: #fad19e;
+--color-soft-apricot-300: #f7b96e;
+--color-soft-apricot-400: #f5a23d;
+--color-soft-apricot-500: #f28b0d;
+--color-soft-apricot-600: #c26f0a;
+--color-soft-apricot-700: #915308;
+--color-soft-apricot-800: #613805;
+--color-soft-apricot-900: #301c03;
+--color-soft-apricot-950: #221302;
+
+--color-faded-copper-50: #f6f2ef;
+--color-faded-copper-100: #ede6de;
+--color-faded-copper-200: #daccbe;
+--color-faded-copper-300: #c8b39d;
+--color-faded-copper-400: #b6997c;
+--color-faded-copper-500: #a3805c;
+--color-faded-copper-600: #836649;
+--color-faded-copper-700: #624d37;
+--color-faded-copper-800: #413325;
+--color-faded-copper-900: #211a12;
+--color-faded-copper-950: #17120d;
+
