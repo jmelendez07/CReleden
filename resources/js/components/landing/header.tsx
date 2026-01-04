@@ -15,7 +15,8 @@ export default function Header({ className = '' }: { className?: string }) {
             <div className="flex items-center gap-[79px]">
                 <Link 
                     className="nunito-medium text-[20px] text-[#3A3A3A] hover:text-[#F03328] underline-0 hover:underline hover:underline-offset-10 decoration-[#F03328]"
-                    href="">
+                    href=""
+                >
                     Inicio
                 </Link>
                 <Link 

@@ -16,5 +16,5 @@ export function AppShell({ children, variant = 'header' }: AppShellProps) {
         );
     }
 
-    return <SidebarProvider defaultOpen={isOpen}>{children}</SidebarProvider>;
+    return <SidebarProvider className='!bg-[#F5F5F5]' defaultOpen={isOpen}>{children}</SidebarProvider>;
 }
