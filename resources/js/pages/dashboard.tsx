@@ -1,14 +1,19 @@
 import FirstElipseBanner from '@/components/dashboard/banner/first-elipse';
 import SecondElipseBanner from '@/components/dashboard/banner/second-elipse';
 import ThirdElipseBanner from '@/components/dashboard/banner/third-elipse';
-import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import { SharedData, type BreadcrumbItem, Order } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
-import { Search, Clock, ShoppingCart, CheckCircle, XCircle } from 'lucide-react';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
-import Autoplay from 'embla-carousel-autoplay';
+import { Download, Search, ShoppingCart, TrendingUp } from 'lucide-react';
+import OrderCard from '@/components/dashboard/order-card';
+import { Bar, BarChart, CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts"
+import {
+    ChartContainer,
+    ChartTooltip,
+    ChartTooltipContent,
+} from "@/components/ui/chart";
+import { exportMethod } from '@/routes/dashboard/orders';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -17,8 +22,40 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function Dashboard({ recentOrders }: { recentOrders: Order[] }) {
+const chartConfig = {
+    ingresos: {
+        label: "Ingresos",
+        color: "#F03328",
+    },
+    pedidos: {
+        label: "Pedidos",
+        color: "#FCDBB2",
+    },
+    ventas: {
+        label: "Ventas",
+        color: "#DB4A58",
+    },
+}
+
+interface DashboardProps {
+    recentOrders: Order[];
+    topDaysData: Array<{ day: string; ventas: number }>;
+    revenueData: Array<{ day: string; ingresos: number; pedidos: number }>;
+    todayRevenue: number;
+}
+
+export default function Dashboard({ recentOrders, topDaysData, revenueData, todayRevenue }: DashboardProps) {
     const { auth } = usePage<SharedData>().props;
+
+    // Encontrar el día con más ventas
+    const topDay = topDaysData && topDaysData.length > 0 
+        ? topDaysData.reduce((max, day) => day.ventas > max.ventas ? day : max, topDaysData[0])
+        : { day: 'Sábado', ventas: 0 };
+
+    // Calcular el total de ingresos del mes
+    const monthlyTotal = revenueData && revenueData.length > 0
+        ? revenueData.reduce((sum, day) => sum + day.ingresos, 0)
+        : 0;
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -39,7 +76,9 @@ export default function Dashboard({ recentOrders }: { recentOrders: Order[] }) {
                     <h5 className="nunito-bold text-white text-[40px]">
                         Total de Ingresos Generados el Día de <span className="text-[#FCDBB2]">Hoy</span>
                     </h5>
-                    <p className='nunito font-extrabold text-white text-[60px] leading-18 mb-[20px]'>$243.000</p>
+                    <p className='nunito font-extrabold text-white text-[60px] leading-18 mb-[20px]'>
+                        ${todayRevenue.toLocaleString('es-CO', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                    </p>
                     <p className="nunito-medium text-white text-[18px] opacity-90">
                         Revisa el total de ventas y pedidos completados del día actual
                     </p>
@@ -53,82 +92,17 @@ export default function Dashboard({ recentOrders }: { recentOrders: Order[] }) {
                     />
                 </div>
                 <div className="grid gap-[20px]">
-                    <h6 className='nunito-bold text-[26px] leading-12'>
-                        <span className='bg-[#FCDBB2] px-[14px] py-[8px] text-shadow-md rounded-full text-white mr-[14px]'>Pedidos</span>
-                        Recientes
-                    </h6>
+                    <div className="flex items-center justify-between">
+                        <h6 className='nunito-bold text-[26px] leading-12'>
+                            <span className='bg-[#FCDBB2] px-[14px] py-[8px] text-shadow-md rounded-full text-white mr-[14px]'>Pedidos</span>
+                            Recientes
+                        </h6>
+                    </div>
                     <div className="grid grid-cols-3 gap-[20px]">
                         {recentOrders && recentOrders.length > 0 ? (
                             recentOrders.map((order) => {
                                 return (
-                                    <div key={order.id} className="bg-white rounded-[16px] p-[20px]">
-                                        <div className="flex items-start justify-between mb-[16px]">
-                                            <div>
-                                                <div className="grid grid-cols-[auto_1fr] gap-[12px] items-center">
-                                                    <h5 className="nunito-bold text-[22px]">#{order.code}</h5>
-                                                </div>
-                                                <p className="nunito text-[18px] text-gray-500">
-                                                    {order.type?.name}
-                                                    {order.details && order.details.length > 0 && (
-                                                        <span>
-                                                            , Productos ({order.details.reduce((sum, detail) => sum + detail.quantity, 0)})
-                                                        </span>
-                                                    )}
-                                                </p>
-                                            </div>
-                                            <p className="nunito-bold text-[26px] text-[#F03328]">
-                                                ${order.total.toLocaleString('es-CO')}
-                                            </p>
-                                        </div>
-
-                                        {order.details && order.details.length > 0 && (
-                                            <div className="mb-[16px]">
-                                                <Carousel 
-                                                    plugins={[
-                                                        Autoplay({
-                                                            delay: 2000
-                                                        })
-                                                    ]}
-                                                    className="w-full"
-                                                >
-                                                    <CarouselContent>
-                                                        {order.details.map((detail) => (
-                                                            <CarouselItem key={detail.id}>
-                                                                <div className="rounded-[12px] p-[12px]">
-                                                                    <div 
-                                                                        className={`
-                                                                            w-full h-[300px] mb-[10px] flex items-center justify-center flex-shrink-0 rounded-[8px] overflow-hidden
-                                                                            ${detail.product?.image ? '' : 'bg-gray-200'}
-                                                                        `}
-                                                                    >
-                                                                        {detail.product?.image ? (
-                                                                            <img 
-                                                                                src={detail.product.image} 
-                                                                                alt={detail.product.name}
-                                                                                className="w-auto h-full object-cover"
-                                                                            />
-                                                                        ) : (
-                                                                            <div className="w-full h-full flex items-center justify-center">
-                                                                                <ShoppingCart className="size-20 text-gray-400" />
-                                                                            </div>
-                                                                        )}
-                                                                    </div>
-                                                                    <div className="flex gap-[12px]">
-                                                                        <div className="flex-1 min-w-0">
-                                                                            <h6 className="nunito-bold text-center text-[22px] truncate">
-                                                                                {detail.product?.name}
-                                                                                <span className='nunito text-[16px] ml-[10px] text-gray-600'>Cant: {detail.quantity}</span>
-                                                                            </h6>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </CarouselItem>
-                                                        ))}
-                                                    </CarouselContent>
-                                                </Carousel>
-                                            </div>
-                                        )}
-                                    </div>
+                                    <OrderCard key={order.id} order={order} />
                                 );
                             })
                         ) : (
@@ -139,6 +113,157 @@ export default function Dashboard({ recentOrders }: { recentOrders: Order[] }) {
                                 </p>
                             </div>
                         )}
+                    </div>
+                </div>
+                <div className="grid gap-[20px]">
+                    <div className="grid grid-cols-[1fr_auto] items-center">
+                        <h6 className='nunito-bold text-[26px] leading-12'>
+                            Tu negocio en <span className='text-[#F03328] cookie-regular text-[40px]'>Números</span>
+                        </h6>
+                        <a
+                            href={exportMethod().url}
+                            className="cursor-pointer flex items-center gap-[8px] bg-gradient-to-r from-[#F03328] to-[#DB4A58] text-white px-[20px] py-[12px] rounded-[12px] nunito-bold text-[18px] hover:shadow-lg transition-all duration-200 hover:scale-105"
+                        >
+                            <Download className="size-5" />
+                            Descargar Extracto
+                        </a>
+                    </div>
+                    
+                    <div className="grid grid-cols-[2fr_1fr] gap-[20px]">
+                        <div className="bg-white rounded-[16px] p-[24px] border border-gray-200">
+                            <div className="mb-[20px]">
+                                <h6 className="nunito-bold text-[20px] text-gray-800 mb-[4px]">
+                                    Pulso de Ventas - <span className="text-[#F03328]">${monthlyTotal.toLocaleString('es-CO', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</span>
+                                </h6>
+                                <p className="nunito text-[14px] text-gray-500">
+                                    Ingresos diarios del último mes
+                                </p>
+                            </div>
+                            <ChartContainer config={chartConfig} className="h-[300px] w-full">
+                                <LineChart
+                                    data={revenueData}
+                                    margin={{
+                                        top: 5,
+                                        right: 10,
+                                        left: 10,
+                                        bottom: 5,
+                                    }}
+                                >
+                                    <CartesianGrid 
+                                        strokeDasharray="3 3" 
+                                        stroke="#f0f0f0"
+                                        vertical={false}
+                                    />
+                                    <XAxis
+                                        dataKey="day"
+                                        tickLine={false}
+                                        axisLine={false}
+                                        tickMargin={8}
+                                        className="nunito text-[12px]"
+                                    />
+                                    <YAxis
+                                        tickLine={false}
+                                        axisLine={false}
+                                        tickMargin={8}
+                                        className="nunito text-[12px]"
+                                        tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
+                                    />
+                                    <ChartTooltip
+                                        content={
+                                            <ChartTooltipContent 
+                                                className="nunito"
+                                                formatter={(value, name) => {
+                                                    if (name === "ingresos") {
+                                                        return `$${value.toLocaleString()}`
+                                                    }
+                                                    return value
+                                                }}
+                                            />
+                                        }
+                                    />
+                                    <Line
+                                        type="monotone"
+                                        dataKey="ingresos"
+                                        stroke="#F03328"
+                                        strokeWidth={2.5}
+                                        dot={{
+                                            fill: "#F03328",
+                                            r: 4,
+                                        }}
+                                        activeDot={{
+                                            r: 7,
+                                            fill: "#F03328",
+                                        }}
+                                    />
+                                </LineChart>
+                            </ChartContainer>
+                            <div className="flex items-center gap-[8px] mt-[16px] justify-center">
+                                <TrendingUp className="text-[#F03328] size-4" />
+                                <p className="nunito text-[13px] text-gray-600">
+                                    Crecimiento del <span className="nunito-bold text-[#F03328]">23.5%</span> este mes
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Gráfica de Días Más Vendidos */}
+                        <div className="bg-white rounded-[16px] p-[24px] border border-gray-200">
+                            <div className="mb-[20px]">
+                                <h6 className="nunito-bold text-[20px] text-gray-800 mb-[4px]">
+                                    Días Destacados
+                                </h6>
+                                <p className="nunito text-[14px] text-gray-500">
+                                    Pedidos por día de la semana
+                                </p>
+                            </div>
+                            <ChartContainer config={chartConfig} className="h-[300px] w-full">
+                                <BarChart
+                                    data={topDaysData}
+                                    margin={{
+                                        top: 5,
+                                        right: 10,
+                                        left: 10,
+                                        bottom: 5,
+                                    }}
+                                >
+                                    <CartesianGrid 
+                                        strokeDasharray="3 3" 
+                                        stroke="#f0f0f0"
+                                        vertical={false}
+                                    />
+                                    <XAxis
+                                        dataKey="day"
+                                        tickLine={false}
+                                        axisLine={false}
+                                        tickMargin={8}
+                                        className="nunito text-[12px]"
+                                    />
+                                    <YAxis
+                                        tickLine={false}
+                                        axisLine={false}
+                                        tickMargin={8}
+                                        className="nunito text-[12px]"
+                                    />
+                                    <ChartTooltip
+                                        content={
+                                            <ChartTooltipContent 
+                                                className="nunito"
+                                            />
+                                        }
+                                    />
+                                    <Bar
+                                        dataKey="ventas"
+                                        fill="#DB4A58"
+                                        radius={[8, 8, 0, 0]}
+                                    />
+                                </BarChart>
+                            </ChartContainer>
+                            <div className="flex items-center gap-[8px] mt-[16px] justify-center">
+                                <TrendingUp className="text-[#DB4A58] size-4" />
+                                <p className="nunito text-[13px] text-gray-600">
+                                    <span className="nunito-bold text-[#DB4A58]">{topDay.day}</span> es el día con más ventas
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

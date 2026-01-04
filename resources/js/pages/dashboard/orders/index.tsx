@@ -13,6 +13,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import OrderCard from "@/components/dashboard/order-card";
 
 const statusConfig = {
     pending: { label: 'Pendiente', color: 'bg-yellow-100 text-yellow-700', icon: Clock },
@@ -123,7 +124,6 @@ export default function OrderIndex({
                     </div>
                 </div>
 
-                {/* Tabla de Pedidos */}
                 <div className="bg-white rounded-[20px] shadow-sm border border-gray-100 overflow-hidden">
                     {orders.length === 0 ? (
                         <div className="text-center py-[60px]">
@@ -133,183 +133,10 @@ export default function OrderIndex({
                             </p>
                         </div>
                     ) : (
-                        <div className="overflow-x-auto">
-                            <table className="w-full">
-                                <thead className="bg-gray-50 border-b border-gray-200">
-                                    <tr>
-                                        <th className="nunito-bold text-left px-[24px] py-[16px] text-[16px]">Código</th>
-                                        <th className="nunito-bold text-left px-[24px] py-[16px] text-[16px]">Estado</th>
-                                        <th className="nunito-bold text-left px-[24px] py-[16px] text-[16px]">Tipo</th>
-                                        <th className="nunito-bold text-left px-[24px] py-[16px] text-[16px]">Pago</th>
-                                        <th className="nunito-bold text-left px-[24px] py-[16px] text-[16px]">Total</th>
-                                        <th className="nunito-bold text-left px-[24px] py-[16px] text-[16px]">Items</th>
-                                        <th className="nunito-bold text-center px-[24px] py-[16px] text-[16px]">Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {orders.map((order) => {
-                                        const StatusIcon = statusConfig[order.status as keyof typeof statusConfig].icon;
-                                        const isExpanded = expandedOrders.includes(order.id);
-                                        return (
-                                            <>
-                                                <tr key={order.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                                                    <td className="px-[24px] py-[16px]">
-                                                        <div className="flex items-center gap-[12px]">
-                                                            <button
-                                                                onClick={() => toggleOrder(order.id)}
-                                                                className="p-[4px] rounded-[6px] hover:bg-gray-200 transition-colors"
-                                                            >
-                                                                {isExpanded ? (
-                                                                    <ChevronDown className="size-4 text-gray-600" />
-                                                                ) : (
-                                                                    <ChevronRight className="size-4 text-gray-600" />
-                                                                )}
-                                                            </button>
-                                                            <div>
-                                                                <span className="nunito-bold text-[16px]">{order.code}</span>
-                                                                {order.notes && (
-                                                                    <p className="nunito text-[13px] text-gray-500 line-clamp-1">{order.notes}</p>
-                                                                )}
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td className="px-[24px] py-[16px]">
-                                                        <span className={`nunito-semibold text-[13px] px-[12px] py-[6px] rounded-full inline-flex items-center gap-1 ${statusConfig[order.status as keyof typeof statusConfig].color}`}>
-                                                            <StatusIcon className="size-3" />
-                                                            {statusConfig[order.status as keyof typeof statusConfig].label}
-                                                        </span>
-                                                    </td>
-                                                    <td className="px-[24px] py-[16px]">
-                                                        <span className="nunito text-[15px]">{order.type?.name}</span>
-                                                    </td>
-                                                    <td className="px-[24px] py-[16px]">
-                                                        <span className="nunito text-[15px]">{order.method?.name}</span>
-                                                    </td>
-                                                    <td className="px-[24px] py-[16px]">
-                                                        <span className="nunito-bold text-[16px] text-[#F03328]">
-                                                            ${order.total.toLocaleString('es-CO')}
-                                                        </span>
-                                                    </td>
-                                                    <td className="px-[24px] py-[16px]">
-                                                        <span className="nunito text-[15px] text-gray-600">
-                                                            {order.details?.length || 0} items
-                                                        </span>
-                                                    </td>
-                                                    <td className="px-[24px] py-[16px]">
-                                                        <div className="flex gap-[8px] justify-center">
-                                                            <Link
-                                                                href={`/dashboard/orders/${order.id}`}
-                                                                className="p-[6px] rounded-[6px] hover:bg-green-50 transition-colors"
-                                                                title="Ver detalle"
-                                                            >
-                                                                <Eye className="size-4 text-green-500" />
-                                                            </Link>
-                                                            <Link
-                                                                href={`/dashboard/orders/${order.id}/edit`}
-                                                                className="p-[6px] rounded-[6px] hover:bg-blue-50 transition-colors"
-                                                                title="Editar"
-                                                            >
-                                                                <Edit2 className="size-4 text-blue-500" />
-                                                            </Link>
-                                                            <button
-                                                                onClick={() => handleDelete(order)}
-                                                                className="p-[6px] rounded-[6px] hover:bg-red-50 transition-colors"
-                                                                title="Eliminar"
-                                                            >
-                                                                <Trash2 className="size-4 text-[#F03328]" />
-                                                            </button>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                {isExpanded && order.details && order.details.length > 0 && (
-                                                    <tr key={`${order.id}-details`}>
-                                                        <td colSpan={7} className="bg-gray-50 px-[24px] py-[20px]">
-                                                            <div className="space-y-[16px]">
-                                                                <h4 className="nunito-bold text-[16px] text-gray-700 mb-[12px]">Productos del pedido</h4>
-                                                                {order.details.map((detail) => (
-                                                                    <div key={detail.id} className="bg-white rounded-[12px] p-[16px] border border-gray-200">
-                                                                        <div className="flex gap-[16px]">
-                                                                            {/* Imagen del producto */}
-                                                                            <div className="w-[100px] h-[100px] flex-shrink-0 bg-gray-100 rounded-[8px] overflow-hidden">
-                                                                                {detail.product?.image ? (
-                                                                                    <img 
-                                                                                        src={detail.product.image} 
-                                                                                        alt={detail.product.name}
-                                                                                        className="w-full h-full object-cover"
-                                                                                    />
-                                                                                ) : (
-                                                                                    <div className="w-full h-full flex items-center justify-center">
-                                                                                        <ShoppingCart className="size-8 text-gray-400" />
-                                                                                    </div>
-                                                                                )}
-                                                                            </div>
-
-                                                                            {/* Detalles del producto */}
-                                                                            <div className="flex-1 space-y-[8px]">
-                                                                                <div className="flex items-start justify-between">
-                                                                                    <div>
-                                                                                        <h5 className="nunito-bold text-[16px]">{detail.product?.name}</h5>
-                                                                                        <p className="nunito text-[13px] text-gray-500">{detail.product?.category?.name}</p>
-                                                                                    </div>
-                                                                                    <div className="text-right">
-                                                                                        <p className="nunito text-[13px] text-gray-500">
-                                                                                            {detail.quantity} x ${detail.unit_price.toLocaleString('es-CO')}
-                                                                                        </p>
-                                                                                        <p className="nunito-bold text-[16px] text-[#F03328]">
-                                                                                            ${detail.subtotal.toLocaleString('es-CO')}
-                                                                                        </p>
-                                                                                    </div>
-                                                                                </div>
-
-                                                                                {/* Notas del producto */}
-                                                                                {detail.notes && (
-                                                                                    <div className="bg-yellow-50 border border-yellow-200 rounded-[8px] p-[8px]">
-                                                                                        <p className="nunito-semibold text-[12px] text-yellow-800">
-                                                                                            <span className="font-bold">Nota:</span> {detail.notes}
-                                                                                        </p>
-                                                                                    </div>
-                                                                                )}
-
-                                                                                {/* Ingredientes */}
-                                                                                {detail.product?.ingredients && detail.product.ingredients.length > 0 && (
-                                                                                    <div className="mt-[8px]">
-                                                                                        <p className="nunito-semibold text-[12px] text-gray-600 mb-[6px]">Ingredientes:</p>
-                                                                                        <Carousel
-                                                                                            opts={{
-                                                                                                align: "start",
-                                                                                            }}
-                                                                                            className="w-full"
-                                                                                        >
-                                                                                            <CarouselContent className="-ml-1">
-                                                                                                {detail.product.ingredients.map((ingredient) => (
-                                                                                                    <CarouselItem key={ingredient.id} className="pl-1 basis-auto">
-                                                                                                        <span className="nunito-medium text-[11px] px-[8px] py-[4px] bg-gray-100 text-gray-700 rounded-full whitespace-nowrap inline-block">
-                                                                                                            {ingredient.name}
-                                                                                                            {ingredient.pivot?.quantity_needed && (
-                                                                                                                <span className="text-gray-500 ml-1">
-                                                                                                                    ({ingredient.pivot.quantity_needed} {ingredient.unit_of_measurement})
-                                                                                                                </span>
-                                                                                                            )}
-                                                                                                        </span>
-                                                                                                    </CarouselItem>
-                                                                                                ))}
-                                                                                            </CarouselContent>
-                                                                                        </Carousel>
-                                                                                    </div>
-                                                                                )}
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                ))}
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                )}
-                                            </>
-                                        );
-                                    })}
-                                </tbody>
-                            </table>
+                        <div className="grid grid-cols-3 gap-[20px]">
+                            {orders.map((order) => (
+                                <OrderCard key={order.id} order={order} />
+                            ))}
                         </div>
                     )}
                 </div>
