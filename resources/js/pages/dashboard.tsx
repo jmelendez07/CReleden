@@ -205,7 +205,6 @@ export default function Dashboard({ recentOrders, topDaysData, revenueData, toda
                             </div>
                         </div>
 
-                        {/* Gráfica de Días Más Vendidos */}
                         <div className="bg-white rounded-[16px] p-[24px] border border-gray-200">
                             <div className="mb-[20px]">
                                 <h6 className="nunito-bold text-[20px] text-gray-800 mb-[4px]">

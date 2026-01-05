@@ -7,6 +7,7 @@ import Navbar from '@/components/landing/navbar';
 import CircularGradient from '@/components/landing/circular-gradient';
 import Footer from '@/components/landing/footer';
 import HeroBestFoods from '@/components/landing/hero-best-foods';
+import WhatsappIcon from '@/components/landing/whatsapp-icon';
 
 export default function Welcome({
     canRegister = true,
@@ -806,13 +807,20 @@ export default function Welcome({
     // );
 
     return (
-        <main className="w-full min-h-screen overflow-x-hidden grid grid-cols-1 place-content-start relative pt-[40px]">
+        <main className="w-full bg-[#F8B78D]/15 min-h-screen overflow-x-hidden grid grid-cols-1 place-content-start relative pt-[40px]">
             <CircularGradient className='absolute z-0 size-[46.25vw] -top-[105px] -left-[228px] px-[80px]' />
             <Header className='mb-[44px] z-1 px-[80px]' />
             <Hero className='mb-[86px] relative z-0 px-[80px]' />
             <Navbar className='mb-[80px] z-1 relative px-[80px]' />
             <HeroBestFoods className='mb-[56px] z-1 px-[80px]' />
             <Footer />
+            <a 
+                className="fixed z-5 bg-[#51c85d] flex justify-center items-center bottom-10 right-10 size-18 rounded-full bg-[]"
+                href='https://wa.me/573246399328'
+                target='_blank'
+            >
+                <WhatsappIcon className='size-8' />
+            </a>
         </main>
     );
 }

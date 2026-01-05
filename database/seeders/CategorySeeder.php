@@ -15,14 +15,9 @@ class CategorySeeder extends Seeder
     {
         $categories = [
             [
-                "name" => 'Picadas',
-                "description" => 'Una verdadera delicia',
-                "image" => '/images/picada-navbar.png',
-            ],
-            [
-                "name" => 'Hamburguesas',
-                "description" => 'Nunca probarás otra igual',
-                "image" => '/images/burguer-navbar.jpg',
+                "name" => 'Entradas',
+                "description" => "Aquí comienza lo bueno",
+                "image" => "/images/categoria-entradas.png"
             ],
             [
                 "name" => 'Asados',
@@ -30,9 +25,39 @@ class CategorySeeder extends Seeder
                 "image" => '/images/asado-navbar.png',
             ],
             [
+                "name" => 'Picadas',
+                "description" => 'Una verdadera delicia',
+                "image" => '/images/picada-navbar.png',
+            ],
+            [
+                "name" => 'Patacón',
+                "description" => 'Un deleite sin igual',
+                "image" => '/images/categoria-patacones.png',
+            ],
+            [
                 "name" => 'Perros',
                 "description" => 'Con mucho queso',
                 "image" => '/images/hot-dog-navbar.jpg',
+            ],
+            [
+                "name" => 'Hamburguesas',
+                "description" => 'Nunca probarás otra igual',
+                "image" => '/images/burguer-navbar.jpg',
+            ],
+            [
+                "name" => 'Menú Infantil',
+                "description" => 'Lo mejor para los más pequeños',
+                "image" => '/images/categoria-infantil.png'
+            ],
+            [
+                "name" => 'Bebidas',
+                "description" => 'Refrescante y tu mejor compañero',
+                "image" => '/images/categoria-bebidas.png'
+            ],
+            [
+                "name" => 'Jugos Naturales',
+                "description" => 'Refrescante y sencillamente natural',
+                "image" => '/images/categoria-jugos-naturales.png'
             ]
         ];
 

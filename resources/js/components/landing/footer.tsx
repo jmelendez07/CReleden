@@ -28,22 +28,33 @@ export default function Footer({ className = '' }: { className?: string }) {
                 <h6 className="nunito-bold text-[50px] text-white text-shadow-sm mb-[15px]">
                     comidas con alta calidad
                 </h6>
-                <Link
-                    href=""
+                <a
+                    href="https://wa.me/573246399328"
+                    target="_blank"
                     className="bg-white rounded-[50px] py-[16.5px] px-[34.5px] text-[#DB4A58] nunito-semibold text-[23px]"
                 >
                     Ordena Ahora!
-                </Link>
+                </a>
                 <div className="absolute right-[80px] bottom-[20px]">
                     <div className="flex items-center justify-end gap-4 mb-2">
-                        <Link className="bg-white rounded-[5px] grid place-content-center size-10 place-items-center">
+                        <a  
+                            href="https://www.facebook.com/"
+                            target="_blank"
+                            className="bg-white rounded-[5px] grid place-content-center size-10 place-items-center"
+                        >
                             <Facebook className="text-[#DB4A58] size-8" />
-                        </Link>
-                        <Link className="bg-white rounded-[5px] grid place-content-center size-10 place-items-center">
+                        </a>
+                        <a 
+                            href="https://www.instagram.com/"
+                            target="_blank"
+                            className="bg-white rounded-[5px] grid place-content-center size-10 place-items-center"
+                        >
                             <Instagram className="text-[#DB4A58] size-8" />
-                        </Link>
+                        </a>
                     </div>
-                    <p className="nunito-bold text-[20px]">+57 123 456 7890</p>
+                    <a href="https://wa.me/573246399328" target="_blank" className="nunito-bold text-[20px]">
+                        +57 3246399328
+                    </a>
                 </div>
             </div>
         </footer>

@@ -15,12 +15,13 @@ export default function Hero({ className = '' }: { className?: string }) {
                 <p className="text-[#666666] mb-[37px] text-[25px] nunito-regular">
                     El Edén es donde el antojo manda. Comidas rápidas irresistibles, porciones generosas y ese sabor que te hace volver. Buen parche, buena comida y pura gozadera.
                 </p>
-                <Link 
-                    href="#"
+                <a 
+                    href="https://wa.me/573246399328"
+                    target='_blank'
                     className='nunito font-extrabold text-[20px] text-[white] py-[15.5px] px-[43px] bg-[#F03328] rounded-[38px]'
                 >
                     Ordena Ahora!
-                </Link>
+                </a>
             </div>
             <div className="relative flex items-end justify-end">
                 <button 

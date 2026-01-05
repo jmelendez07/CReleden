@@ -25,12 +25,13 @@ export default function Header({ className = '' }: { className?: string }) {
                 >
                     Nuestro Menú
                 </Link>
-                <Link 
+                <a 
                     className="nunito-medium text-[20px] text-[#3A3A3A] hover:text-[#F03328] underline-0 hover:underline hover:underline-offset-10 decoration-[#F03328]"
-                    href=""
+                    href='https://wa.me/573246399328'
+                    target='_blank'
                 >
                     Contáctanos
-                </Link>
+                </a>
                 <Link 
                     className="nunito font-extrabold text-[20px] text-[#F03328] py-[12px] px-[43px] border-[2px] border-[#F03328] rounded-[38px]"
                     href={login()}

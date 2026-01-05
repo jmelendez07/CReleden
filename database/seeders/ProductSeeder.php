@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Category;
-use App\Models\Ingredient;
 use App\Models\Product;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -15,340 +14,391 @@ class ProductSeeder extends Seeder
      */
     public function run(): void
     {
-        // Asegurarse de que existen categorías
-        $hamburguesas = Category::where('name', 'Hamburguesas')->first();
-        $perros = Category::where('name', 'Perros')->first();
-        $pizzas = Category::where('name', 'Picadas')->first();
+        // Obtener categorías
+        $entradas = Category::where('name', 'Entradas')->first();
         $asados = Category::where('name', 'Asados')->first();
-
-        // Si no existen categorías, crearlas
-        if (!$hamburguesas) {
-            $hamburguesas = Category::create(['name' => 'Hamburguesas', 'description' => 'Deliciosas hamburguesas', 'image' => '']);
-        }
-        if (!$perros) {
-            $perros = Category::create(['name' => 'Perros', 'description' => 'Perros calientes', 'image' => '']);
-        }
-        if (!$pizzas) {
-            $pizzas = Category::create(['name' => 'Picadas', 'description' => 'Picadas y entradas', 'image' => '']);
-        }
-        if (!$asados) {
-            $asados = Category::create(['name' => 'Asados', 'description' => 'Carnes asadas', 'image' => '']);
-        }
-
-        // Obtener ingredientes
-        $carneRes = Ingredient::where('name', 'Carne de res molida')->first();
-        $carnePollo = Ingredient::where('name', 'Carne de pollo')->first();
-        $tocineta = Ingredient::where('name', 'Tocineta')->first();
-        $salchicha = Ingredient::where('name', 'Salchicha para perros')->first();
-        $quesoCheddar = Ingredient::where('name', 'Queso cheddar')->first();
-        $quesoMozzarella = Ingredient::where('name', 'Queso mozzarella')->first();
-        $quesoAmericano = Ingredient::where('name', 'Queso americano')->first();
-        $lechuga = Ingredient::where('name', 'Lechuga')->first();
-        $tomate = Ingredient::where('name', 'Tomate')->first();
-        $cebolla = Ingredient::where('name', 'Cebolla')->first();
-        $cebollaCaramelizada = Ingredient::where('name', 'Cebolla caramelizada')->first();
-        $pepinillos = Ingredient::where('name', 'Pepinillos')->first();
-        $jalapenos = Ingredient::where('name', 'Jalapeños')->first();
-        $champinones = Ingredient::where('name', 'Champiñones')->first();
-        $papasFritas = Ingredient::where('name', 'Papas fritas congeladas')->first();
-        $salsaBBQ = Ingredient::where('name', 'Salsa BBQ')->first();
-        $salsaRosada = Ingredient::where('name', 'Salsa rosada')->first();
-        $salsaPicante = Ingredient::where('name', 'Salsa picante')->first();
-        $salsaAjo = Ingredient::where('name', 'Salsa de ajo')->first();
-        $panHamburguesa = Ingredient::where('name', 'Pan para hamburguesa')->first();
-        $panPerro = Ingredient::where('name', 'Pan para perro caliente')->first();
-        $aguacate = Ingredient::where('name', 'Aguacate')->first();
+        $picadas = Category::where('name', 'Picadas')->first();
+        $patacon = Category::where('name', 'Patacón')->first();
+        $perros = Category::where('name', 'Perros')->first();
+        $hamburguesas = Category::where('name', 'Hamburguesas')->first();
+        $menuInfantil = Category::where('name', 'Menú Infantil')->first();
+        $bebidas = Category::where('name', 'Bebidas')->first();
+        $jugosNaturales = Category::where('name', 'Jugos Naturales')->first();
 
         $products = [
-            // Hamburguesas
+            // ENTRADAS
             [
-                'name' => 'Hamburguesa Clásica',
-                'description' => 'Carne de res, lechuga, tomate, cebolla, queso cheddar y salsas especiales',
-                'image' => '',
-                'price' => 15000,
-                'category_id' => $hamburguesas->id,
-                'ingredients' => [
-                    ['id' => $carneRes->id, 'quantity' => 0.15],
-                    ['id' => $panHamburguesa->id, 'quantity' => 1],
-                    ['id' => $lechuga->id, 'quantity' => 0.05],
-                    ['id' => $tomate->id, 'quantity' => 0.05],
-                    ['id' => $cebolla->id, 'quantity' => 0.03],
-                    ['id' => $quesoCheddar->id, 'quantity' => 0.05],
-                ],
+                'name' => 'Canasta de Patacón Rellena de Pollo',
+                'description' => 'Canasta de patacón rellena con pollo',
+                'image' => '/images/canasta-de-patacon-relleno-de-pollo.png',
+                'price' => 12000,
+                'category_id' => $entradas->id,
             ],
             [
-                'name' => 'Hamburguesa BBQ',
-                'description' => 'Carne de res, queso cheddar, tocineta, cebolla caramelizada y salsa BBQ',
-                'image' => '',
-                'price' => 18000,
-                'category_id' => $hamburguesas->id,
-                'ingredients' => [
-                    ['id' => $carneRes->id, 'quantity' => 0.15],
-                    ['id' => $panHamburguesa->id, 'quantity' => 1],
-                    ['id' => $quesoCheddar->id, 'quantity' => 0.05],
-                    ['id' => $tocineta->id, 'quantity' => 0.04],
-                    ['id' => $cebollaCaramelizada->id, 'quantity' => 0.05],
-                    ['id' => $salsaBBQ->id, 'quantity' => 0.03],
-                ],
+                'name' => 'Canasta de Patacón Rellena de Salchicha Ranchera',
+                'description' => 'Canasta de patacón rellena con salchicha ranchera',
+                'image' => '/images/patacones-con-salchicha.png',
+                'price' => 10000,
+                'category_id' => $entradas->id,
             ],
             [
-                'name' => 'Hamburguesa Doble',
-                'description' => 'Doble carne de res, doble queso americano, lechuga, tomate y pepinillos',
-                'image' => '',
-                'price' => 22000,
-                'category_id' => $hamburguesas->id,
-                'ingredients' => [
-                    ['id' => $carneRes->id, 'quantity' => 0.30],
-                    ['id' => $panHamburguesa->id, 'quantity' => 1],
-                    ['id' => $quesoAmericano->id, 'quantity' => 0.10],
-                    ['id' => $lechuga->id, 'quantity' => 0.05],
-                    ['id' => $tomate->id, 'quantity' => 0.05],
-                    ['id' => $pepinillos->id, 'quantity' => 0.03],
-                ],
+                'name' => 'Pinchos de Chorizo y Butifarra',
+                'description' => 'Deliciosos pinchos de chorizo y butifarra',
+                'image' => '/images/pinchos-chorizon.png',
+                'price' => 4500,
+                'category_id' => $entradas->id,
             ],
             [
-                'name' => 'Hamburguesa Especial',
-                'description' => 'Carne de res, queso mozzarella, champiñones, tocineta y salsa de ajo',
-                'image' => '',
-                'price' => 20000,
-                'category_id' => $hamburguesas->id,
-                'ingredients' => [
-                    ['id' => $carneRes->id, 'quantity' => 0.15],
-                    ['id' => $panHamburguesa->id, 'quantity' => 1],
-                    ['id' => $quesoMozzarella->id, 'quantity' => 0.05],
-                    ['id' => $champinones->id, 'quantity' => 0.06],
-                    ['id' => $tocineta->id, 'quantity' => 0.04],
-                    ['id' => $salsaAjo->id, 'quantity' => 0.03],
-                ],
-            ],
-            [
-                'name' => 'Hamburguesa Mexicana',
-                'description' => 'Carne de res, queso cheddar, jalapeños, guacamole, nachos y salsa picante',
-                'image' => '',
-                'price' => 19000,
-                'category_id' => $hamburguesas->id,
-                'ingredients' => [
-                    ['id' => $carneRes->id, 'quantity' => 0.15],
-                    ['id' => $panHamburguesa->id, 'quantity' => 1],
-                    ['id' => $quesoCheddar->id, 'quantity' => 0.05],
-                    ['id' => $jalapenos->id, 'quantity' => 0.03],
-                    ['id' => $aguacate->id, 'quantity' => 0.08],
-                    ['id' => $salsaPicante->id, 'quantity' => 0.03],
-                ],
+                'name' => 'Aros de Cebolla',
+                'description' => 'Aros de cebolla crujientes',
+                'image' => '/images/aros-de-cebolla.png',
+                'price' => 5000,
+                'category_id' => $entradas->id,
             ],
 
-            // Perros Calientes
+            // ASADOS
             [
-                'name' => 'Perro Sencillo',
-                'description' => 'Salchicha premium, salsas de la casa y papas chips',
-                'image' => '',
-                'price' => 10000,
-                'category_id' => $perros->id,
-                'ingredients' => [
-                    ['id' => $salchicha->id, 'quantity' => 0.12],
-                    ['id' => $panPerro->id, 'quantity' => 1],
-                    ['id' => $papasFritas->id, 'quantity' => 0.10],
-                ],
+                'name' => 'Pechuga con Chimichurri',
+                'description' => 'Pechuga de pollo con salsa chimichurri',
+                'image' => '/images/asado-navbar.png',
+                'price' => 22000,
+                'category_id' => $asados->id,
             ],
             [
-                'name' => 'Perro Especial',
-                'description' => 'Salchicha, queso mozzarella, tocineta, salsa rosada y papas chips',
-                'image' => '',
-                'price' => 14000,
+                'name' => 'Pechuga Gratinada',
+                'description' => 'Pechuga de pollo gratinada',
+                'image' => '/images/asado-navbar.png',
+                'price' => 24000,
+                'category_id' => $asados->id,
+            ],
+            [
+                'name' => 'Cerdo con Chimichurri',
+                'description' => 'Carne de cerdo con salsa chimichurri',
+                'image' => '/images/asado-navbar.png',
+                'price' => 23000,
+                'category_id' => $asados->id,
+            ],
+            [
+                'name' => 'Cerdo Gratinado',
+                'description' => 'Carne de cerdo gratinada',
+                'image' => '/images/asado-navbar.png',
+                'price' => 25000,
+                'category_id' => $asados->id,
+            ],
+            [
+                'name' => 'Carne de Res con Chimichurri',
+                'description' => 'Carne de res con salsa chimichurri',
+                'image' => '/images/asado-navbar.png',
+                'price' => 26000,
+                'category_id' => $asados->id,
+            ],
+            [
+                'name' => 'Churrasco',
+                'description' => 'Delicioso churrasco',
+                'image' => '/images/asado-navbar.png',
+                'price' => 32000,
+                'category_id' => $asados->id,
+            ],
+
+            // PICADAS
+            [
+                'name' => 'Picada Personal',
+                'description' => 'Picada para una persona',
+                'image' => '/images/picada-navbar.png',
+                'price' => 19000,
+                'category_id' => $picadas->id,
+            ],
+            [
+                'name' => 'Picada Dos Personas',
+                'description' => 'Picada para dos personas',
+                'image' => '/images/salchipapa-2.png',
+                'price' => 25000,
+                'category_id' => $picadas->id,
+            ],
+            [
+                'name' => 'Picada Tres Personas',
+                'description' => 'Picada para tres personas',
+                'image' => '/images/picada-navbar.png',
+                'price' => 30000,
+                'category_id' => $picadas->id,
+            ],
+            [
+                'name' => 'Picada Cuatro Personas',
+                'description' => 'Picada para cuatro personas',
+                'image' => '/images/salchipapa-2.png',
+                'price' => 37000,
+                'category_id' => $picadas->id,
+            ],
+            [
+                'name' => 'Picada Mediana',
+                'description' => 'Picada mediana',
+                'image' => '/images/salchipapa-2.png',
+                'price' => 45000,
+                'category_id' => $picadas->id,
+            ],
+            [
+                'name' => 'Picada Grande',
+                'description' => 'Picada grande (55-65-80-90-100)',
+                'image' => '/images/picada-navbar.png',
+                'price' => 90000,
+                'category_id' => $picadas->id,
+            ],
+            [
+                'name' => 'Picada Extra Grande',
+                'description' => 'Picada extra grande',
+                'image' => '/images/salchipapa-2.png',
+                'price' => 150000,
+                'category_id' => $picadas->id,
+            ],
+            [
+                'name' => 'Picada Mega Grande',
+                'description' => 'Picada mega grande',
+                'image' => '/images/picada-navbar.png',
+                'price' => 250000,
+                'category_id' => $picadas->id,
+            ],
+
+            // PATACÓN
+            [
+                'name' => 'Patacón Personal',
+                'description' => 'Patacón para una persona',
+                'image' => '/images/categoria-patacones.png',
+                'price' => 20000,
+                'category_id' => $patacon->id,
+            ],
+            [
+                'name' => 'Patacón Dos Personas',
+                'description' => 'Patacón para dos personas',
+                'image' => '/images/categoria-patacones.png',
+                'price' => 27000,
+                'category_id' => $patacon->id,
+            ],
+            [
+                'name' => 'Patacón Tres Personas',
+                'description' => 'Patacón para tres personas',
+                'image' => '/images/patacones-con-salchicha.png',
+                'price' => 35000,
+                'category_id' => $patacon->id,
+            ],
+
+            // PERROS
+            [
+                'name' => 'Perro Súper',
+                'description' => 'Perro caliente súper con mucho queso',
+                'image' => '/images/hot-dog-navbar.jpg',
+                'price' => 9000,
                 'category_id' => $perros->id,
-                'ingredients' => [
-                    ['id' => $salchicha->id, 'quantity' => 0.12],
-                    ['id' => $panPerro->id, 'quantity' => 1],
-                    ['id' => $quesoMozzarella->id, 'quantity' => 0.05],
-                    ['id' => $tocineta->id, 'quantity' => 0.04],
-                    ['id' => $salsaRosada->id, 'quantity' => 0.03],
-                    ['id' => $papasFritas->id, 'quantity' => 0.10],
-                ],
             ],
             [
                 'name' => 'Perro Americano',
-                'description' => 'Salchicha, queso cheddar, cebolla caramelizada, mostaza y salsa BBQ',
-                'image' => '',
-                'price' => 13000,
-                'category_id' => $perros->id,
-                'ingredients' => [
-                    ['id' => $salchicha->id, 'quantity' => 0.12],
-                    ['id' => $panPerro->id, 'quantity' => 1],
-                    ['id' => $quesoCheddar->id, 'quantity' => 0.05],
-                    ['id' => $cebollaCaramelizada->id, 'quantity' => 0.04],
-                    ['id' => $salsaBBQ->id, 'quantity' => 0.03],
-                ],
-            ],
-            [
-                'name' => 'Perro Gratinado',
-                'description' => 'Salchicha, abundante queso gratinado, tocineta y salsa de la casa',
-                'image' => '',
-                'price' => 16000,
-                'category_id' => $perros->id,
-                'ingredients' => [
-                    ['id' => $salchicha->id, 'quantity' => 0.12],
-                    ['id' => $panPerro->id, 'quantity' => 1],
-                    ['id' => $quesoMozzarella->id, 'quantity' => 0.08],
-                    ['id' => $tocineta->id, 'quantity' => 0.04],
-                ],
-            ],
-
-            // Picadas y Entradas
-            [
-                'name' => 'Picada Personal',
-                'description' => 'Carne asada, chicharrón, papa criolla, chorizo y arepa',
-                'image' => '',
-                'price' => 25000,
-                'category_id' => $pizzas->id,
-                'ingredients' => [
-                    ['id' => $carneRes->id, 'quantity' => 0.15],
-                    ['id' => $carnePollo->id, 'quantity' => 0.10],
-                    ['id' => $papasFritas->id, 'quantity' => 0.15],
-                ],
-            ],
-            [
-                'name' => 'Picada Familiar',
-                'description' => 'Carne asada, pollo, chicharrón, papa criolla, chorizo, morcilla y arepas',
-                'image' => '',
-                'price' => 65000,
-                'category_id' => $pizzas->id,
-                'ingredients' => [
-                    ['id' => $carneRes->id, 'quantity' => 0.40],
-                    ['id' => $carnePollo->id, 'quantity' => 0.30],
-                    ['id' => $papasFritas->id, 'quantity' => 0.40],
-                ],
-            ],
-            [
-                'name' => 'Alitas BBQ',
-                'description' => '10 alitas de pollo marinadas en salsa BBQ con papas fritas',
-                'image' => '',
-                'price' => 22000,
-                'category_id' => $pizzas->id,
-                'ingredients' => [
-                    ['id' => $carnePollo->id, 'quantity' => 0.40],
-                    ['id' => $salsaBBQ->id, 'quantity' => 0.08],
-                    ['id' => $papasFritas->id, 'quantity' => 0.15],
-                ],
-            ],
-            [
-                'name' => 'Dedos de Queso',
-                'description' => '8 dedos de queso mozzarella empanizados con salsa de tomate',
-                'image' => '',
-                'price' => 15000,
-                'category_id' => $pizzas->id,
-                'ingredients' => [
-                    ['id' => $quesoMozzarella->id, 'quantity' => 0.20],
-                ],
-            ],
-
-            // Asados
-            [
-                'name' => 'Churrasco',
-                'description' => 'Corte de carne premium, chimichurri, papa criolla y ensalada',
-                'image' => '',
-                'price' => 32000,
-                'category_id' => $asados->id,
-                'ingredients' => [
-                    ['id' => $carneRes->id, 'quantity' => 0.25],
-                    ['id' => $papasFritas->id, 'quantity' => 0.15],
-                    ['id' => $lechuga->id, 'quantity' => 0.05],
-                    ['id' => $tomate->id, 'quantity' => 0.05],
-                ],
-            ],
-            [
-                'name' => 'Pechuga a la Plancha',
-                'description' => 'Pechuga de pollo a la plancha, arroz, papas fritas y ensalada',
-                'image' => '',
-                'price' => 24000,
-                'category_id' => $asados->id,
-                'ingredients' => [
-                    ['id' => $carnePollo->id, 'quantity' => 0.25],
-                    ['id' => $papasFritas->id, 'quantity' => 0.15],
-                    ['id' => $lechuga->id, 'quantity' => 0.05],
-                    ['id' => $tomate->id, 'quantity' => 0.05],
-                ],
-            ],
-            [
-                'name' => 'Costillas BBQ',
-                'description' => 'Costillas de cerdo bañadas en salsa BBQ, papas al horno y maíz',
-                'image' => '',
-                'price' => 35000,
-                'category_id' => $asados->id,
-                'ingredients' => [
-                    ['id' => $carneRes->id, 'quantity' => 0.35],
-                    ['id' => $salsaBBQ->id, 'quantity' => 0.10],
-                    ['id' => $papasFritas->id, 'quantity' => 0.20],
-                ],
-            ],
-            [
-                'name' => 'Parrillada Mix',
-                'description' => 'Carne de res, pollo, chorizo, morcilla, papa criolla y yuca',
-                'image' => '',
-                'price' => 38000,
-                'category_id' => $asados->id,
-                'ingredients' => [
-                    ['id' => $carneRes->id, 'quantity' => 0.20],
-                    ['id' => $carnePollo->id, 'quantity' => 0.20],
-                    ['id' => $papasFritas->id, 'quantity' => 0.20],
-                ],
-            ],
-
-            // Más opciones variadas
-            [
-                'name' => 'Papas Supremas',
-                'description' => 'Papas fritas gigantes con queso cheddar, tocineta y cebolla verde',
-                'image' => '',
-                'price' => 16000,
-                'category_id' => $pizzas->id,
-                'ingredients' => [
-                    ['id' => $papasFritas->id, 'quantity' => 0.30],
-                    ['id' => $quesoCheddar->id, 'quantity' => 0.10],
-                    ['id' => $tocineta->id, 'quantity' => 0.06],
-                    ['id' => $cebolla->id, 'quantity' => 0.03],
-                ],
-            ],
-            [
-                'name' => 'Salchipapas',
-                'description' => 'Papas fritas con salchicha, salsas de la casa y queso',
-                'image' => '',
+                'description' => 'Perro caliente americano con mucho queso',
+                'image' => '/images/hot-dog-navbar.jpg',
                 'price' => 12000,
                 'category_id' => $perros->id,
-                'ingredients' => [
-                    ['id' => $papasFritas->id, 'quantity' => 0.20],
-                    ['id' => $salchicha->id, 'quantity' => 0.12],
-                    ['id' => $quesoMozzarella->id, 'quantity' => 0.05],
-                ],
             ],
             [
-                'name' => 'Patacones con Todo',
-                'description' => 'Patacones con carne desmechada, queso, guacamole y hogao',
-                'image' => '',
-                'price' => 18000,
-                'category_id' => $pizzas->id,
-                'ingredients' => [
-                    ['id' => $carneRes->id, 'quantity' => 0.15],
-                    ['id' => $quesoMozzarella->id, 'quantity' => 0.06],
-                    ['id' => $aguacate->id, 'quantity' => 0.10],
-                    ['id' => $tomate->id, 'quantity' => 0.05],
-                    ['id' => $cebolla->id, 'quantity' => 0.03],
-                ],
+                'name' => 'Perro Choripero',
+                'description' => 'Perro caliente choripero con mucho queso',
+                'image' => '/images/hot-dog-navbar.jpg',
+                'price' => 13000,
+                'category_id' => $perros->id,
+            ],
+            [
+                'name' => 'Perro Suizo',
+                'description' => 'Perro caliente suizo con mucho queso',
+                'image' => '/images/hot-dog-navbar.jpg',
+                'price' => 14000,
+                'category_id' => $perros->id,
+            ],
+            [
+                'name' => 'Perro Ranchero',
+                'description' => 'Perro caliente ranchero con mucho queso',
+                'image' => '/images/hot-dog-navbar.jpg',
+                'price' => 15000,
+                'category_id' => $perros->id,
+            ],
+
+            // HAMBURGUESAS
+            [
+                'name' => 'Hamburguesa Sencilla de Res',
+                'description' => 'Hamburguesa sencilla de carne de res',
+                'image' => '/images/burguer-navbar.jpg',
+                'price' => 20000,
+                'category_id' => $hamburguesas->id,
+            ],
+            [
+                'name' => 'Hamburguesa Sencilla de Pechuga',
+                'description' => 'Hamburguesa sencilla de pechuga',
+                'image' => '/images/burguer-hero.png',
+                'price' => 21000,
+                'category_id' => $hamburguesas->id,
+            ],
+            [
+                'name' => 'Hamburguesa Doble Carne',
+                'description' => 'Hamburguesa con doble carne',
+                'image' => '/images/burguer-navbar.jpg',
+                'price' => 25000,
+                'category_id' => $hamburguesas->id,
+            ],
+            [
+                'name' => 'Hamburguesa de la Casa',
+                'description' => 'Hamburguesa especial de la casa',
+                'image' => '/images/burguer-navbar.jpg',
+                'price' => 27000,
+                'category_id' => $hamburguesas->id,
+            ],
+
+            // MENÚ INFANTIL
+            [
+                'name' => 'Mini Salchipapa',
+                'description' => 'Salchipapa para los más pequeños',
+                'image' => '/images/categoria-infantil.png',
+                'price' => 6000,
+                'category_id' => $menuInfantil->id,
+            ],
+            [
+                'name' => 'Mini Perro + Jugo de Cajita',
+                'description' => 'Mini perro caliente con jugo de cajita',
+                'image' => '/images/hot-dog-navbar.jpg',
+                'price' => 10000,
+                'category_id' => $menuInfantil->id,
+            ],
+
+            // BEBIDAS
+            [
+                'name' => 'Coca Cola 1.5',
+                'description' => 'Coca Cola de 1.5 litros',
+                'image' => '/images/categoria-bebidas.png',
+                'price' => 8000,
+                'category_id' => $bebidas->id,
+            ],
+            [
+                'name' => 'Cola Romana 1.5',
+                'description' => 'Cola Romana de 1.5 litros',
+                'image' => '/images/gaseosa-roja.png',
+                'price' => 8000,
+                'category_id' => $bebidas->id,
+            ],
+            [
+                'name' => 'Coca Cola Litro',
+                'description' => 'Coca Cola de 1 litro',
+                'image' => '/images/categoria-bebidas.png',
+                'price' => 6000,
+                'category_id' => $bebidas->id,
+            ],
+            [
+                'name' => 'Coca Cola Personal',
+                'description' => 'Coca Cola personal',
+                'image' => '/images/categoria-bebidas.png',
+                'price' => 3500,
+                'category_id' => $bebidas->id,
+            ],
+            [
+                'name' => 'Postobón Personal',
+                'description' => 'Postobón personal',
+                'image' => '/images/gaseosa-roja.png',
+                'price' => 3500,
+                'category_id' => $bebidas->id,
+            ],
+            [
+                'name' => 'Jugo Hit',
+                'description' => 'Jugo Hit',
+                'image' => '/images/categoria-jugos-naturales.png',
+                'price' => 3500,
+                'category_id' => $bebidas->id,
+            ],
+            [
+                'name' => 'Agua',
+                'description' => 'Agua mineral',
+                'image' => '/images/botella-agua.png',
+                'price' => 2000,
+                'category_id' => $bebidas->id,
+            ],
+
+            // JUGOS NATURALES EN AGUA
+            [
+                'name' => 'Jugo de Tomate de Árbol en Agua',
+                'description' => 'Jugo natural de tomate de árbol en agua',
+                'image' => '/images/categoria-jugos-naturales.png',
+                'price' => 8000,
+                'category_id' => $jugosNaturales->id,
+            ],
+            [
+                'name' => 'Jugo de Maracuyá en Agua',
+                'description' => 'Jugo natural de maracuyá en agua',
+                'image' => '/images/categoria-jugos-naturales.png',
+                'price' => 8000,
+                'category_id' => $jugosNaturales->id,
+            ],
+            [
+                'name' => 'Jugo de Mora en Agua',
+                'description' => 'Jugo natural de mora en agua',
+                'image' => '/images/categoria-jugos-naturales.png',
+                'price' => 8000,
+                'category_id' => $jugosNaturales->id,
+            ],
+            [
+                'name' => 'Limonada en Agua',
+                'description' => 'Limonada natural en agua',
+                'image' => '/images/categoria-jugos-naturales.png',
+                'price' => 8000,
+                'category_id' => $jugosNaturales->id,
+            ],
+            [
+                'name' => 'Jugo de Lulo en Agua',
+                'description' => 'Jugo natural de lulo en agua',
+                'image' => '/images/categoria-jugos-naturales.png',
+                'price' => 8000,
+                'category_id' => $jugosNaturales->id,
+            ],
+            [
+                'name' => 'Limonada Cerezada',
+                'description' => 'Limonada cerezada',
+                'image' => '/images/categoria-jugos-naturales.png',
+                'price' => 10000,
+                'category_id' => $jugosNaturales->id,
+            ],
+
+            // JUGOS NATURALES EN LECHE
+            [
+                'name' => 'Jugo de Tomate de Árbol en Leche',
+                'description' => 'Jugo natural de tomate de árbol en leche',
+                'image' => '/images/categoria-jugos-naturales.png',
+                'price' => 10000,
+                'category_id' => $jugosNaturales->id,
+            ],
+            [
+                'name' => 'Jugo de Maracuyá en Leche',
+                'description' => 'Jugo natural de maracuyá en leche',
+                'image' => '/images/categoria-jugos-naturales.png',
+                'price' => 10000,
+                'category_id' => $jugosNaturales->id,
+            ],
+            [
+                'name' => 'Jugo de Mora en Leche',
+                'description' => 'Jugo natural de mora en leche',
+                'image' => '/images/categoria-jugos-naturales.png',
+                'price' => 10000,
+                'category_id' => $jugosNaturales->id,
+            ],
+            [
+                'name' => 'Jugo de Níspero en Leche',
+                'description' => 'Jugo natural de níspero en leche',
+                'image' => '/images/categoria-jugos-naturales.png',
+                'price' => 10000,
+                'category_id' => $jugosNaturales->id,
+            ],
+            [
+                'name' => 'Jugo de Lulo en Leche',
+                'description' => 'Jugo natural de lulo en leche',
+                'image' => '/images/categoria-jugos-naturales.png',
+                'price' => 10000,
+                'category_id' => $jugosNaturales->id,
             ],
         ];
 
         foreach ($products as $productData) {
-            $ingredients = $productData['ingredients'];
-            unset($productData['ingredients']);
-            
-            $product = Product::create($productData);
-            
-            // Attach ingredients with quantities
-            $ingredientsData = [];
-            foreach ($ingredients as $ingredient) {
-                $ingredientsData[$ingredient['id']] = [
-                    'quantity_needed' => $ingredient['quantity']
-                ];
-            }
-            $product->ingredients()->attach($ingredientsData);
+            Product::create($productData);
         }
     }
 }
