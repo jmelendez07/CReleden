@@ -3,7 +3,7 @@ import { Facebook, Instagram } from "lucide-react";
 
 export default function Footer({ className = '' }: { className?: string }) {
     return (
-        <footer className="grid grid-cols-1 w-screen">
+        <footer className="grid grid-cols-1 w-full">
             <div className="h-[180px] relative z-2">
                 <img 
                     className="absolute left-[18.88%] top-[30px]"

@@ -1,7 +1,11 @@
-import { login } from '@/routes';
-import { Link } from '@inertiajs/react';
+import { dashboard, home, login, menu } from '@/routes';
+import { type SharedData } from '@/types';
+import { Link, usePage } from '@inertiajs/react';
 
 export default function Header({ className = '' }: { className?: string }) {
+
+    const { auth } = usePage<SharedData>().props;
+
     return (
         <nav className={`w-full flex items-center justify-between ${className}`}>
             <div className="flex items-center gap-5">
@@ -15,13 +19,13 @@ export default function Header({ className = '' }: { className?: string }) {
             <div className="flex items-center gap-[79px]">
                 <Link 
                     className="nunito-medium text-[20px] text-[#3A3A3A] hover:text-[#F03328] underline-0 hover:underline hover:underline-offset-10 decoration-[#F03328]"
-                    href=""
+                    href={home()}
                 >
                     Inicio
                 </Link>
                 <Link 
                     className="nunito-medium text-[20px] text-[#3A3A3A] hover:text-[#F03328] underline-0 hover:underline hover:underline-offset-10 decoration-[#F03328]"
-                    href=""
+                    href={menu()}
                 >
                     Nuestro Menú
                 </Link>
@@ -34,7 +38,7 @@ export default function Header({ className = '' }: { className?: string }) {
                 </a>
                 <Link 
                     className="nunito font-extrabold text-[20px] text-[#F03328] py-[12px] px-[43px] border-[2px] border-[#F03328] rounded-[38px]"
-                    href={login()}
+                    href={auth.user ? dashboard() : login()}
                 >
                     Acceder
                 </Link>

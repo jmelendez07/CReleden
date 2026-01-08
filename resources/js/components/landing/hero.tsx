@@ -3,7 +3,7 @@ import CircularGradient from './circular-gradient';
 
 export default function Hero({ className = '' }: { className?: string }) {
     return (
-        <article className={`w-full grid h-full grid-cols-[45%_55%] items-center gap-[36px] ${className}`}>
+        <article className={`w-full max-w-full grid h-full grid-cols-[45%_55%] items-center gap-[36px] ${className}`}>
             <div className="flex flex-col justify-center items-start h-full">
                 <div className="flex items-center gap-[10px] mb-[15px]">
                     <h2 className='nunito-bold text-[61px] 2xl:text-[75px] 2xl:!font-extrabold text-[#2D2D2D]'>Come y</h2>
@@ -31,7 +31,7 @@ export default function Hero({ className = '' }: { className?: string }) {
                     $23.000
                 </button>
                 <div className="relative bg-[#F03328] size-[36.8vw] mt-[20px] mr-[40px] rounded-full">
-                    <CircularGradient className="absolute -z-1 size-[55vw] top-1/2 left-1/2 -translate-x-[calc(50%+40px)] -translate-y-1/2" />
+                    <CircularGradient className="absolute -z-1 size-[50vw] top-1/2 left-1/2 -translate-x-[calc(50%+40px)] -translate-y-1/2" />
                 </div>
                 <img 
                     style={{ width: '43vw', height: 'auto' }}

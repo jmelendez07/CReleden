@@ -1,48 +1,15 @@
 import { Link } from "@inertiajs/react";
 import CircularGradient from "./circular-gradient";
+import { Product } from "@/types";
 
-const products = [
-    {
-        name: 'Breakfast Food',
-        description: 'Delicious breakfast options to start your day right.',
-        img: '/images/burguer-best-foods.jpg',
-        price: 23000,
-    },
-    {
-        name: 'Breakfast Food',
-        description: 'Delicious breakfast options to start your day right.',
-        img: '/images/burguer-best-foods.jpg',
-        price: 25000,
-    },
-    {
-        name: 'Breakfast Food',
-        description: 'Delicious breakfast options to start your day right.',
-        img: '/images/burguer-best-foods.jpg',
-        price: 23000,
-    },
-    {
-        name: 'Breakfast Food',
-        description: 'Delicious breakfast options to start your day right.',
-        img: '/images/burguer-best-foods.jpg',
-        price: 23000,
-    },
-    {
-        name: 'Breakfast Food',
-        description: 'Delicious breakfast options to start your day right.',
-        img: '/images/burguer-best-foods.jpg',
-        price: 23000,
-    },
-    {
-        name: 'Breakfast Food',
-        description: 'Delicious breakfast options to start your day right.',
-        img: '/images/burguer-best-foods.jpg',
-        price: 23000,
-    }
-]
+interface HeroBestFoodsProps {
+    className?: string;
+    topProducts?: Product[];
+}
 
-export default function HeroBestFoods({ className = '' }: { className?: string }) {
+export default function HeroBestFoods({ className = '', topProducts = [] }: HeroBestFoodsProps) {
     return (
-        <div className={`relative flex flex-col items-center justify-start ${className}`}>
+        <div className={`relative overflow-x-hidden flex flex-col items-center justify-start ${className} pb-[10px]`}>
             <h4 className="nunito-bold text-[55px] z-2 2xl:text-[70px]">
                 Los más pedidos del 
                 <span className="cookie-regular text-[#F03328] text-[80px] 2xl:text-[100px] 2xl:leading-20 ml-[16px]">Edén</span> 
@@ -52,15 +19,15 @@ export default function HeroBestFoods({ className = '' }: { className?: string }
                 Los que todo el mundo pide. Comida rápida sabrosa, bien servida y hecha para disfrutar sin complique.
             </p>
             <div className="grid grid-cols-3 gap-8 z-2">
-                {products.map((product) => (
-                    <div key={product.name} className="bg-white overflow-hidden shadow-md rounded-[20px] pb-[30px]">
+                {topProducts.map((product) => (
+                    <div key={product.id} className="bg-white overflow-hidden shadow-md rounded-[20px] pb-[30px]">
                         <img 
-                            src={product.img} 
+                            src={product.image} 
                             alt={product.name}
-                            className="w-full h- object-cover h-[300px] mb-[30px]"
+                            className="w-full object-cover h-[300px] mb-[30px]"
                         />
-                        <div className="grid grid-cols-[1fr_auto] gap-5 items-center px-[20px] mb-[20px]">
-                            <p className="nunito-medium text-[31px] truncate">
+                        <div className="grid grid-cols-[1fr_auto] gap-5 items-center px-[20px] mb-[8px]">
+                            <p className="nunito-medium text-[24px] leading-7 line-clamp-2">
                                 {product.name}
                             </p>
                             <Link
@@ -71,7 +38,7 @@ export default function HeroBestFoods({ className = '' }: { className?: string }
                             </Link>
                         </div>
                         <div className="grid grid-cols-[1fr_auto] overflow-hidden items-center gap-5 px-[20px]">
-                            <p className="nunito-medium text-[20px] text-[#404040] line-clamp-3">
+                            <p className="nunito-medium text-[18px] line-clamp-2 leading-5 text-[#404040] line-clamp-3">
                                 {product.description}
                             </p>
                             <p className="nunito-bold text-[34px]">
