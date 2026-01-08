@@ -1,7 +1,7 @@
 import AppLayout from "@/layouts/app-layout";
 import { Category, Product } from "@/types";
 import { router, Link } from "@inertiajs/react";
-import { Edit2, Plus, Search, ShoppingBag, Trash2 } from "lucide-react";
+import { Edit2, Plus, Search, ShoppingBag, Trash2, FileDown } from "lucide-react";
 import { create } from "@/routes/dashboard/products";
 import { useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
@@ -58,6 +58,14 @@ export default function ProductIndex({
         }
     };
 
+    const handleExportPdf = () => {
+        const params = new URLSearchParams();
+        if (search) params.append('search', search);
+        if (categoryFilter) params.append('category', categoryFilter);
+        
+        window.open(`/dashboard/products-export-pdf?${params.toString()}`, '_blank');
+    };
+
     return (
         <AppLayout>
             <div className="grid grid-cols-1 gap-[40px] px-[40px] py-[30px]">
@@ -69,9 +77,17 @@ export default function ProductIndex({
                         </p>
                     </div>
                     <div className="flex gap-[12px]">
+                        <button
+                            onClick={handleExportPdf}
+                            type="button"
+                            className="cursor-pointer nunito-semibold bg-white border-2 border-[#F03328] text-[#F03328] text-[18px] px-[22px] py-[12px] rounded-[16px] flex items-center gap-2 hover:bg-[#F03328] hover:text-white transition-colors"
+                        >
+                            <FileDown className="size-5" />
+                            Exportar a PDF
+                        </button>
                         <Link
                             href={create.url()}
-                            className="nunito-semibold bg-[#F03328] text-[18px] text-white px-[24px] py-[14px] rounded-[16px] flex items-center gap-2 hover:bg-[#d92b21] transition-colors"
+                            className="nunito-semibold bg-[#F03328] text-[18px] text-white px-[22px] py-[12px] rounded-[16px] flex items-center gap-2 hover:bg-[#d92b21] transition-colors"
                         >
                             <Plus className="size-5" />
                             Nuevo Producto

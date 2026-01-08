@@ -7,6 +7,7 @@ use App\Models\Ingredient;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ProductController extends Controller
 {
@@ -80,7 +81,13 @@ class ProductController extends Controller
             $imagePath = '/images/products/' . $imageName;
         }
 
+        // Autogenerar código
+        $lastProduct = Product::withTrashed()->orderBy('id', 'desc')->first();
+        $nextId = $lastProduct ? $lastProduct->id + 1 : 1;
+        $code = '#' . str_pad($nextId, 3, '0', STR_PAD_LEFT);
+
         $product = Product::create([
+            'code' => $code,
             'name' => $request->name,
             'description' => $request->description,
             'price' => $request->price,
@@ -194,5 +201,31 @@ class ProductController extends Controller
 
         return redirect()->route('dashboard.products.index')
             ->with('success', 'Producto eliminado exitosamente');
+    }
+
+    /**
+     * Export products to PDF.
+     */
+    public function exportPdf(Request $request)
+    {
+        $search = $request->input('search');
+        $categoryFilter = $request->input('category');
+
+        $products = Product::with('category')
+            ->when($search, function ($query, $search) {
+                $query->where('name', 'like', "%{$search}%")
+                      ->orWhere('description', 'like', "%{$search}%")
+                      ->orWhere('code', 'like', "%{$search}%");
+            })
+            ->when($categoryFilter, function ($query, $categoryFilter) {
+                $query->where('category_id', $categoryFilter);
+            })
+            ->orderBy('code', 'asc')
+            ->get();
+
+        $pdf = Pdf::loadView('pdf.products', compact('products'));
+        $pdf->setPaper('a4', 'portrait');
+        
+        return $pdf->download('productos-' . date('Y-m-d') . '.pdf');
     }
 }

@@ -1,0 +1,24 @@
+export default function FastFoodTacoIcon(props: React.SVGProps<SVGSVGElement>) {
+    return (
+        <svg 
+            width="800px" 
+            height="800px" 
+            viewBox="0 0 64 64" 
+            xmlns="http://www.w3.org/2000/svg"
+            {...props}
+        >
+            <defs>
+                <style>{`.a{fill:none;stroke:currentColor;stroke-linejoin:round;stroke-width:2px;}`}</style>
+            </defs>
+            <title />
+            <path 
+                className="a" 
+                d="M29.25,23h5.5A18.25,18.25,0,0,1,53,41.25V46.5A3.5,3.5,0,0,1,49.5,50h-35A3.5,3.5,0,0,1,11,46.5V41.25A18.25,18.25,0,0,1,29.25,23Z" 
+            />
+            <path 
+                className="a" 
+                d="M52.79,47.88A6,6,0,1,0,54.33,36a6,6,0,0,0-6-10.36,6,6,0,0,0-10.36-6,6,6,0,0,0-12,0,6,6,0,0,0-10.36,6A6,6,0,0,0,9.67,36a6,6,0,1,0,1.69,11.83" 
+            />
+        </svg>
+    );
+}

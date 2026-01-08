@@ -16,3 +16,8 @@ export function isSameUrl(
 export function resolveUrl(url: NonNullable<InertiaLinkProps['href']>): string {
     return typeof url === 'string' ? url : url.url;
 }
+
+export function whatsappUrl(): string {
+    const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER || '573004780907';
+    return `https://wa.me/${whatsappNumber}`;
+} 

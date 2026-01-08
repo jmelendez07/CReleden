@@ -1,9 +1,9 @@
-import { Link } from "@inertiajs/react";
+import { whatsappUrl } from "@/lib/utils";
 import { Facebook, Instagram } from "lucide-react";
 
 export default function Footer({ className = '' }: { className?: string }) {
     return (
-        <footer className="grid grid-cols-1 w-full">
+        <footer className={`grid grid-cols-1 w-full ${className}`}>
             <div className="h-[180px] relative z-2">
                 <img 
                     className="absolute left-[18.88%] top-[30px]"
@@ -29,7 +29,7 @@ export default function Footer({ className = '' }: { className?: string }) {
                     comidas con alta calidad
                 </h6>
                 <a
-                    href="https://wa.me/573246399328"
+                    href={whatsappUrl()}
                     target="_blank"
                     className="bg-white rounded-[50px] py-[16.5px] px-[34.5px] text-[#DB4A58] nunito-semibold text-[23px]"
                 >
@@ -52,8 +52,8 @@ export default function Footer({ className = '' }: { className?: string }) {
                             <Instagram className="text-[#DB4A58] size-8" />
                         </a>
                     </div>
-                    <a href="https://wa.me/573246399328" target="_blank" className="nunito-bold text-[20px]">
-                        +57 3246399328
+                    <a href={whatsappUrl()} target="_blank" className="nunito-bold text-[20px]">
+                        +57 300-478-0907
                     </a>
                 </div>
             </div>

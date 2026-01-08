@@ -14,7 +14,10 @@ export default function ProductCard({ product }: { product: Product }) {
             </div>
             <div className="p-[20px]">
                 <div className="flex items-start gap-[10px] justify-between mb-[8px]">
-                    <h6 className="nunito-bold text-[20px] line-clamp-2 text-start">{product.name}</h6>
+                    <h6 className="nunito-bold text-[20px] line-clamp-2 text-start">
+                        <span className="text-gray-600">{product.code}</span>{" "}
+                        {product.name}
+                    </h6>
                     <span className="nunito-bold text-[#F03328] text-[20px]">
                         ${product.price}
                     </span>

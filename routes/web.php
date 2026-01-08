@@ -16,6 +16,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('dashboard/orders', OrderController::class)->names('dashboard.orders');
     Route::resource('dashboard/products', ProductController::class)->names('dashboard.products');
+    Route::get('dashboard/products-export-pdf', [ProductController::class, 'exportPdf'])->name('dashboard.products.export.pdf');
     Route::resource('dashboard/categories', CategoryController::class)->names('dashboard.categories');
     Route::resource('dashboard/ingredients', IngredientController::class)->names('dashboard.ingredients');
     Route::get('dashboard/orders-export', [OrderExportController::class, 'export'])->name('dashboard.orders.export');

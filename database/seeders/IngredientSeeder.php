@@ -65,6 +65,15 @@ class IngredientSeeder extends Seeder
             ['name' => 'Huevo', 'unit_of_measurement' => 'und', 'unit_price' => 500, 'supplier' => 'Granja Avícola', 'current_stock' => 300],
             ['name' => 'Aguacate', 'unit_of_measurement' => 'kg', 'unit_price' => 7000, 'supplier' => 'Verduras Frescas', 'current_stock' => 20],
             ['name' => 'Piña', 'unit_of_measurement' => 'kg', 'unit_price' => 4000, 'supplier' => 'Frutas Tropicales', 'current_stock' => 15],
+            
+            // Frutas para Jugos
+            ['name' => 'Tomate de árbol', 'unit_of_measurement' => 'kg', 'unit_price' => 5000, 'supplier' => 'Frutas Tropicales', 'current_stock' => 20],
+            ['name' => 'Maracuyá', 'unit_of_measurement' => 'kg', 'unit_price' => 6000, 'supplier' => 'Frutas Tropicales', 'current_stock' => 18],
+            ['name' => 'Mora', 'unit_of_measurement' => 'kg', 'unit_price' => 8000, 'supplier' => 'Frutas Tropicales', 'current_stock' => 15],
+            ['name' => 'Limón', 'unit_of_measurement' => 'kg', 'unit_price' => 3000, 'supplier' => 'Frutas Tropicales', 'current_stock' => 25],
+            ['name' => 'Lulo', 'unit_of_measurement' => 'kg', 'unit_price' => 7000, 'supplier' => 'Frutas Tropicales', 'current_stock' => 12],
+            ['name' => 'Níspero', 'unit_of_measurement' => 'kg', 'unit_price' => 6500, 'supplier' => 'Frutas Tropicales', 'current_stock' => 10],
+            ['name' => 'Azúcar', 'unit_of_measurement' => 'kg', 'unit_price' => 3500, 'supplier' => 'Distribuidora Central', 'current_stock' => 50],
         ];
 
         foreach ($ingredients as $ingredient) {

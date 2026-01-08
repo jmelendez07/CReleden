@@ -1,5 +1,6 @@
 import { Link } from '@inertiajs/react';
 import CircularGradient from './circular-gradient';
+import { whatsappUrl } from '@/lib/utils';
 
 export default function Hero({ className = '' }: { className?: string }) {
     return (
@@ -16,7 +17,7 @@ export default function Hero({ className = '' }: { className?: string }) {
                     El Edén es donde el antojo manda. Comidas rápidas irresistibles, porciones generosas y ese sabor que te hace volver. Buen parche, buena comida y pura gozadera.
                 </p>
                 <a 
-                    href="https://wa.me/573246399328"
+                    href={whatsappUrl()}
                     target='_blank'
                     className='nunito font-extrabold text-[20px] text-[white] py-[15.5px] px-[43px] bg-[#F03328] rounded-[38px]'
                 >
