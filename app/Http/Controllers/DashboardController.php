@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Roles;
 use App\Models\Order;
 use App\Services\OrderStatisticsService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
@@ -18,6 +20,12 @@ class DashboardController extends Controller
 
     public function index()
     {
+        $user = Auth::user();
+
+        if ($user->hasRole(Roles::WAITER->value)) {
+            return redirect()->route('dashboard.orders.index');
+        }
+
         $recentOrders = Order::with(['type', 'method', 'details.product.category'])
             ->orderBy('created_at', 'desc')
             ->take(3)

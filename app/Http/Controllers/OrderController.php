@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\PaymentMethods;
+use App\Enums\OrderStatuses;
+use App\Events\OrderPendingCreated;
+use App\Events\OrderStatusUpdated;
+use App\Models\Guarantor;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\OrderType;
 use App\Models\PaymentMethod;
+use Illuminate\Support\Str;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class OrderController extends Controller
@@ -16,79 +21,15 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
-        $statusFilter = $request->input('status');
-        $dateRange = $request->input('date_range', 'today'); // Por defecto 'today'
+        $statusFilter = $request->input('status', OrderStatuses::PENDING->value);
 
-        $orders = Order::with(['type', 'method', 'details.product.category', 'details.product.ingredients'])
+        $orders = Order::with(['type', 'method', 'details.product.category', 'details.product.ingredients', 'guarantor'])
             ->when($search, function ($query, $search) {
                 $query->where('code', 'like', "%{$search}%")
                       ->orWhere('notes', 'like', "%{$search}%");
             })
             ->when($statusFilter, function ($query, $statusFilter) {
                 $query->where('status', $statusFilter);
-            })
-            ->when($dateRange, function ($query, $dateRange) {
-                $driver = DB::connection()->getDriverName();
-                
-                switch ($dateRange) {
-                    case 'today':
-                        switch ($driver) {
-                            case 'pgsql':
-                                $query->whereRaw("DATE(created_at - INTERVAL '6 hours') = CURRENT_DATE");
-                                break;
-                            case 'sqlite':
-                                $query->whereRaw("DATE(datetime(created_at, '-6 hours')) = DATE('now')");
-                                break;
-                            default: // mysql, mariadb
-                                $query->whereRaw("DATE(DATE_SUB(created_at, INTERVAL 6 HOUR)) = CURDATE()");
-                        }
-                        break;
-                        
-                    case 'yesterday':
-                        switch ($driver) {
-                            case 'pgsql':
-                                $query->whereRaw("DATE(created_at - INTERVAL '6 hours') = CURRENT_DATE - INTERVAL '1 day'");
-                                break;
-                            case 'sqlite':
-                                $query->whereRaw("DATE(datetime(created_at, '-6 hours')) = DATE('now', '-1 day')");
-                                break;
-                            default: // mysql, mariadb
-                                $query->whereRaw("DATE(DATE_SUB(created_at, INTERVAL 6 HOUR)) = DATE_SUB(CURDATE(), INTERVAL 1 DAY)");
-                        }
-                        break;
-                        
-                    case 'last_week':
-                        switch ($driver) {
-                            case 'pgsql':
-                                $query->whereRaw("DATE(created_at - INTERVAL '6 hours') >= CURRENT_DATE - INTERVAL '7 days'")
-                                      ->whereRaw("DATE(created_at - INTERVAL '6 hours') <= CURRENT_DATE");
-                                break;
-                            case 'sqlite':
-                                $query->whereRaw("DATE(datetime(created_at, '-6 hours')) >= DATE('now', '-7 days')")
-                                      ->whereRaw("DATE(datetime(created_at, '-6 hours')) <= DATE('now')");
-                                break;
-                            default: // mysql, mariadb
-                                $query->whereRaw("DATE(DATE_SUB(created_at, INTERVAL 6 HOUR)) >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)")
-                                      ->whereRaw("DATE(DATE_SUB(created_at, INTERVAL 6 HOUR)) <= CURDATE()");
-                        }
-                        break;
-                        
-                    case 'last_month':
-                        switch ($driver) {
-                            case 'pgsql':
-                                $query->whereRaw("DATE(created_at - INTERVAL '6 hours') >= CURRENT_DATE - INTERVAL '30 days'")
-                                      ->whereRaw("DATE(created_at - INTERVAL '6 hours') <= CURRENT_DATE");
-                                break;
-                            case 'sqlite':
-                                $query->whereRaw("DATE(datetime(created_at, '-6 hours')) >= DATE('now', '-30 days')")
-                                      ->whereRaw("DATE(datetime(created_at, '-6 hours')) <= DATE('now')");
-                                break;
-                            default: // mysql, mariadb
-                                $query->whereRaw("DATE(DATE_SUB(created_at, INTERVAL 6 HOUR)) >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)")
-                                      ->whereRaw("DATE(DATE_SUB(created_at, INTERVAL 6 HOUR)) <= CURDATE()");
-                        }
-                        break;
-                }
             })
             ->orderBy('created_at', 'desc')
             ->get();
@@ -98,7 +39,6 @@ class OrderController extends Controller
             'filters' => [
                 'search' => $search,
                 'status' => $statusFilter,
-                'date_range' => $dateRange,
             ],
         ]);
     }
@@ -176,17 +116,20 @@ class OrderController extends Controller
             }
         }
 
-        // Generar código único para la orden
-        $code = 'ORD-' . strtoupper(uniqid());
-
         // Crear orden
         $order = Order::create([
-            'code' => $code,
+            'code' => '00000', // Temporal, se actualizará después
+            'token' => (string) Str::uuid(),
             'status' => 'pending',
             'total' => $total,
             'notes' => !empty($orderNotes) ? implode(', ', $orderNotes) : null,
             'type_id' => $orderType->id,
             'payment_method_id' => $paymentMethodId,
+        ]);
+
+        // Generar código con ID de 5 dígitos
+        $order->update([
+            'code' => str_pad($order->id, 5, '0', STR_PAD_LEFT)
         ]);
 
         // Crear detalles
@@ -201,6 +144,92 @@ class OrderController extends Controller
             
             return back()->withErrors(['message' => 'Error al crear el pedido: ' . $e->getMessage()]);
         }
+    }
+
+    public function storeCart(Request $request)
+    {
+        try {
+            $request->validate([
+                'order_type' => 'required|string',
+                'items' => 'required|array|min:1',
+                'items.*.product.id' => 'required|exists:products,id',
+                'items.*.quantity' => 'required|integer|min:1',
+                'items.*.notes' => 'nullable|string|max:500',
+            ]);
+
+            $orderType = OrderType::where('name', $request->order_type)->first();
+            
+            if (!$orderType) {
+                return back()->withErrors(['message' => 'Tipo de orden no válido']);
+            }
+
+            $total = 0;
+            $detailsData = [];
+            $orderNotes = [];
+            
+            foreach ($request->items as $item) {
+                $product = Product::findOrFail($item['product']['id']);
+                $quantity = $item['quantity'];
+                $unitPrice = $product->price;
+                $subtotal = $quantity * $unitPrice;
+                $total += $subtotal;
+
+                $note = $item['notes'] ?? '';
+                
+                $detailsData[] = [
+                    'product_id' => $product->id,
+                    'quantity' => $quantity,
+                    'unit_price' => $unitPrice,
+                    'subtotal' => $subtotal,
+                    'notes' => $note,
+                ];
+
+                if (!empty($note)) {
+                    $orderNotes[] = "{$product->name}: {$note}";
+                }
+            }
+
+            $order = Order::create([
+                'code' => '00000', // Temporal, se actualizará después
+                'token' => (string) Str::uuid(),
+                'status' => OrderStatuses::PENDING->value,
+                'total' => $total,
+                'notes' => !empty($orderNotes) ? implode(', ', $orderNotes) : null,
+                'type_id' => $orderType->id,
+                'payment_method_id' => null,
+            ]);
+
+            $order->update([
+                'code' => str_pad($order->id, 5, '0', STR_PAD_LEFT)
+            ]);
+
+            foreach ($detailsData as $detailData) {
+                $detailData['order_id'] = $order->id;
+                OrderDetail::create($detailData);
+            }
+
+            event(new OrderPendingCreated($order));
+
+            return Inertia::location(route('order.pending', ['token' => $order->token]));
+        } catch (\Exception $e) {
+            return back()->withErrors(['message' => 'Error al crear el pedido: ' . $e->getMessage()]);
+        }
+    }
+
+    public function pending($token)
+    {
+        $order = Order::where('token', $token)->firstOrFail();
+        $order->load(['type', 'method', 'details.product.category']);
+
+        if ($order->status !== OrderStatuses::PENDING->value) {
+            return redirect()
+                ->route('home')
+                ->withErrors(['message' => 'La orden no está pendiente.']);
+        }
+
+        return Inertia::render('order/pending', [
+            'order' => $order,
+        ]);
     }
 
     /**
@@ -317,15 +346,46 @@ class OrderController extends Controller
             ->with('success', 'Pedido actualizado exitosamente');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Order $order)
+    public function updateStatus(Request $request, $id)
     {
-        $order->details()->delete();
+        $request->validate([
+            'status' => 'required|string|in:' . implode(',', array_column(OrderStatuses::cases(), 'value')),
+            'guarantor_name' => 'nullable|string|max:255',
+            'payment_method' => 'nullable|string|in:' . implode(',', array_column(PaymentMethods::cases(), 'value')),
+        ]);
+
+        $order = Order::findOrFail($id);
+        
+        // Guardar el estado anterior
+        $oldStatus = $order->status;
+        
+        $updateData = ['status' => $request->status];
+        
+        if ($request->status === OrderStatuses::CANCELLED->value && $request->payment_method) {
+            $paymentMethod = PaymentMethod::where('name', $request->payment_method)->first();
+            if ($paymentMethod) {
+                $updateData['payment_method_id'] = $paymentMethod->id;
+            }
+        }
+
+        if ($request->status === OrderStatuses::ON_CREDIT->value && $request->guarantor_name) {
+            $guarantor = Guarantor::firstOrCreate(['name' => $request->guarantor_name]);
+            $updateData['guarantor_id'] = $guarantor->id;
+        }
+        
+        $order->update($updateData);
+        event(new OrderStatusUpdated($order, $oldStatus, $request->status));
+
+        return back()
+            ->with('success', 'Estado del pedido actualizado exitosamente');
+    }
+
+    public function destroy($id)
+    {
+        $order = Order::findOrFail($id);
         $order->delete();
 
-        return redirect()->route('dashboard.orders.index')
+        return back()
             ->with('success', 'Pedido eliminado exitosamente');
     }
 }

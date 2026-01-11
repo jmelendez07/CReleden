@@ -1,4 +1,5 @@
 import ProductCard from "@/components/dashboard/product-card";
+import ProductOrder from "@/components/product-order";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { OrderTypes } from "@/enums";
@@ -7,8 +8,8 @@ import { index } from "@/routes/dashboard/orders";
 import { Category, Product } from "@/types";
 import { Link, router, usePage } from "@inertiajs/react";
 import Autoplay from "embla-carousel-autoplay";
-import { ClipboardList, ShoppingCart, Trash2, X } from "lucide-react";
-import { FormEvent, useEffect, useState } from "react";
+import { ClipboardList, X } from "lucide-react";
+import { FormEvent, useState } from "react";
 
 interface OrderCreateProps {
     products: Product[];
@@ -276,61 +277,13 @@ export default function OrderCreate({ products, categories }: OrderCreateProps) 
                             <CarouselContent className="-mt-1 h-[calc(100vh-320px)]">
                                 {groupedProducts.map((item, index) => (
                                     <CarouselItem key={`${item.product.id}-${index}`} className="pt-1 basis-1/2">
-                                        <div className="rounded-[12px] p-[12px]">
-                                            <button
-                                                type="button"
-                                                onClick={() => removeProduct(item.product.id)}
-                                                className={`
-                                                    w-full h-[280px] mb-[10px] cursor-pointer group flex items-center justify-center flex-shrink-0 rounded-[8px] overflow-hidden
-                                                    ${item.product?.image ? '' : 'bg-gray-200 hover:bg-red-200 text-gray-400 hover:text-white'}
-                                                `}
-                                            >
-                                                {item.product?.image ? (
-                                                    <img 
-                                                        src={item.product.image} 
-                                                        alt={item.product.name}
-                                                        className="w-auto h-full object-cover"
-                                                    />
-                                                ) : (
-                                                    <div className="w-full h-full flex items-center justify-center">
-                                                        <ShoppingCart className="size-20 block group-hover:hidden" />
-                                                        <Trash2 className="size-20 hidden group-hover:block" />
-                                                    </div>
-                                                )}
-                                            </button>
-                                            <div className="flex items-center justify-between px-[12px] gap-[8px]">
-                                                <h6 className="nunito-bold text-center text-[22px] truncate">
-                                                    {item.product?.name}
-                                                </h6>
-                                                <div className="flex items-center justify-center gap-[12px]">
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => updateQuantity(item.product.id, -1)}
-                                                        disabled={item.quantity <= 1}
-                                                        className="cursor-pointer bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed rounded-full w-8 h-8 flex items-center justify-center nunito-bold text-[20px]"
-                                                    >
-                                                        -
-                                                    </button>
-                                                    <span className='nunito-semibold text-[18px] min-w-[60px] text-center'>
-                                                        Cant: {item.quantity}
-                                                    </span>
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => updateQuantity(item.product.id, 1)}
-                                                        className="cursor-pointer bg-[#F03328] hover:bg-[#d92b21] text-white rounded-full w-8 h-8 flex items-center justify-center nunito-bold text-[20px]"
-                                                    >
-                                                        +
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <input 
-                                                type="text"
-                                                value={productNotes[item.product.id] || ''}
-                                                onChange={(e) => updateProductNote(item.product.id, e.target.value)}
-                                                placeholder="¿Algún detalle Adicional? Escribe aquí..."
-                                                className="px-[12px] focus:outline-0 w-full"
-                                            />
-                                        </div>
+                                        <ProductOrder 
+                                            item={item} 
+                                            removeProduct={removeProduct}
+                                            updateQuantity={updateQuantity}
+                                            updateProductNote={updateProductNote}
+                                            productNotes={productNotes}
+                                        />
                                     </CarouselItem>
                                 ))}
                             </CarouselContent>

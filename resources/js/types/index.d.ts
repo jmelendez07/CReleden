@@ -40,6 +40,7 @@ export interface User {
     two_factor_enabled?: boolean;
     created_at: string;
     updated_at: string;
+    roles: string[];
     [key: string]: unknown; // This allows for additional properties...
 }
 
@@ -114,4 +115,11 @@ export interface Order {
     details?: OrderDetail[];
     created_at: string;
     updated_at: string;
+    new?: boolean;
+    guarantor?: Guarantor | null;
+}
+
+export interface Guarantor {
+    id: number;
+    name: string;
 }

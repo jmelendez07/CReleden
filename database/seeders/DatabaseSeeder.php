@@ -13,8 +13,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
         User::firstOrCreate(
             ['email' => 'jmelendez07@gmail.com'],
             [
@@ -34,12 +32,14 @@ class DatabaseSeeder extends Seeder
         );
 
         $this->call([
+            RoleSeeder::class,
+            UserSeeder::class,
             PaymentMethodSeeder::class,
             OrderTypeSeeder::class,
             CategorySeeder::class,
             IngredientSeeder::class,
             ProductSeeder::class,
-            OrderSeeder::class
+            // OrderSeeder::class
         ]);
     }
 }

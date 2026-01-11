@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->string("code");
+            $table->string("token")->unique();
             $table->string("status");
             $table->decimal("total", 10, 2);
             $table->text("notes")->nullable();

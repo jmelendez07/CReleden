@@ -1,4 +1,5 @@
 import { Category, Product } from "@/types";
+import { useState } from "react";
 import FastFoodSteakIcon from "@/components/icons/fast-food-steak";
 import FastFoodTacoIcon from "@/components/icons/fast-food-taco";
 import FastFoodFrenchIcon from "@/components/icons/fast-food-french";
@@ -7,7 +8,7 @@ import FastFoodHotDog2Icon from "@/components/icons/fast-food-hot-dog-2";
 import FastFoodPizzaIcon from "@/components/icons/fast-food-pizza";
 import FastFoodBurguerIcon from "@/components/icons/fast-food-burguer";
 import CircularGradient from "../circular-gradient";
-import { whatsappUrl } from "@/lib/utils";
+import { useCart } from "@/contexts/cart-context";
 
 interface ProductListProps {
     products: Product[];
@@ -15,6 +16,43 @@ interface ProductListProps {
 }
 
 export default function ProductList({ products, selectedCategory }: ProductListProps) {
+    const { addToCart } = useCart();
+    const [removedIngredients, setRemovedIngredients] = useState<Record<number, number[]>>({});
+
+    const toggleIngredient = (productId: number, ingredientId: number) => {
+        setRemovedIngredients(prev => {
+            const productRemovedIngredients = prev[productId] || [];
+            const isRemoved = productRemovedIngredients.includes(ingredientId);
+            
+            if (isRemoved) {
+                return {
+                    ...prev,
+                    [productId]: productRemovedIngredients.filter(id => id !== ingredientId)
+                };
+            } else {
+                return {
+                    ...prev,
+                    [productId]: [...productRemovedIngredients, ingredientId]
+                };
+            }
+        });
+    };
+
+    const handleAddToCart = (product: Product) => {
+        const productRemovedIngredients = removedIngredients[product.id] || [];
+        
+        if (productRemovedIngredients.length > 0 && product.ingredients) {
+            const removedNames = product.ingredients
+                .filter(ing => productRemovedIngredients.includes(ing.id))
+                .map(ing => `sin ${ing.name}`);
+            
+            const notes = removedNames.join(', ');
+            addToCart(product, notes);
+        } else {
+            addToCart(product);
+        }
+    };
+
     return (
         <div className="px-[100px]">
             <div className="flex items-center justify-start gap-[12px]">
@@ -74,28 +112,36 @@ export default function ProductList({ products, selectedCategory }: ProductListP
                                     <div className="grid grid-cols-[auto_1fr] gap-[50px] mb-[14px]">
                                         <p className="nunito-medium text-[18px]">Ingredientes:</p>
                                         <ul className="list-disc list-inside nunito text-[16px]">
-                                            {product.ingredients.map(ingredient => (
-                                                <li key={ingredient.id}>
-                                                    {ingredient.name} 
-                                                    <span className="ml-[10px] nunito-bold">
-                                                        {ingredient.pivot?.quantity_needed}{" "}
-                                                        {ingredient.unit_of_measurement}
-                                                    </span>
-                                                </li>
-                                            ))}
+                                            {product.ingredients.map(ingredient => {
+                                                const isRemoved = removedIngredients[product.id]?.includes(ingredient.id);
+                                                return (
+                                                    <li 
+                                                        key={ingredient.id}
+                                                        onClick={() => toggleIngredient(product.id, ingredient.id)}
+                                                        className={`cursor-pointer rounded px-2 py-1 ${
+                                                            isRemoved ? 'line-through text-gray-400' : ''
+                                                        }`}
+                                                    >
+                                                        {ingredient.name} 
+                                                        <span className="ml-[10px] nunito-bold">
+                                                            {ingredient.pivot?.quantity_needed}{" "}
+                                                            {ingredient.unit_of_measurement}
+                                                        </span>
+                                                    </li>
+                                                );
+                                            })}
                                         </ul>
                                     </div>
                                 ): (
                                     <div className="h-full"></div>
                                 )}
                                 <div className="flex items-center justify-between w-full">
-                                    <a 
-                                        href={whatsappUrl()}
-                                        target="_blank"
-                                        className="cursor-pointer nunito font-extrabold text-[18px] text-[white] py-[12px] px-[36px] bg-[#F03328] rounded-[38px]"
+                                    <button 
+                                        onClick={() => handleAddToCart(product)}
+                                        className="cursor-pointer nunito font-extrabold text-[18px] text-[white] py-[12px] px-[36px] bg-[#F03328] rounded-[38px] hover:bg-[#D02820] transition-colors"
                                     >
                                         Ordenar Ahora!
-                                    </a>
+                                    </button>
                                     <p className="nunito text-[20px]">
                                         De 
                                         <span className="nunito-bold text-[30px] ml-[10px]">
